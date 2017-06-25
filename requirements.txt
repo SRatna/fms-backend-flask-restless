@@ -1,0 +1,7 @@
+Flask
+Flask-Restless
+Flask-Restful
+Flask-SQLAlchemy
+Flask-Script
+pymysql
+pyjwt
