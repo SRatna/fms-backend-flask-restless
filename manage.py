@@ -1,6 +1,8 @@
 from app import db,app
 from models.admin import Admin
 from flask_script import Manager
+from models.department import Department
+from models.sub_department import SubDepartment
 
 manager = Manager(app)
 

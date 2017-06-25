@@ -5,6 +5,8 @@ from models.admin import Admin
 from models.user import User
 from models.punch_record import PunchRecord
 from models.branch import Branch
+from models.department import Department
+from models.sub_department import SubDepartment
 
 
 def auth_func(*args, **kwargs):
@@ -22,6 +24,8 @@ def auth_func(*args, **kwargs):
 manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'])
 manager.create_api(Branch, methods=['GET', 'POST'])
+manager.create_api(Department, methods=['GET', 'POST'])
+manager.create_api(SubDepartment, methods=['GET', 'POST'])
 
 @app.route('/login', methods=['POST'])
 def login():
