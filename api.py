@@ -7,6 +7,11 @@ from models.punch_record import PunchRecord
 from models.branch import Branch
 from models.department import Department
 from models.sub_department import SubDepartment
+from models.designation import Designation
+from models.grade import Grade
+from models.mode import Mode
+from models.status import Status
+from models.type import Type
 
 
 def auth_func(*args, **kwargs):
@@ -19,20 +24,15 @@ def auth_func(*args, **kwargs):
         raise ProcessingException(description='Not authenticated!', code=401)
     return True
 
-
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    # response.headers['Access-Control-Allow-Credentials'] = 'true'
-    # Set whatever other headers you like...
-    return response
-
-
 # manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func]))
 manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'])
 manager.create_api(Branch, methods=['GET', 'POST'])
 manager.create_api(Department, methods=['GET', 'POST'])
 manager.create_api(SubDepartment, methods=['GET', 'POST'])
+manager.create_api(Designation, methods=['GET', 'POST'])
+manager.create_api(Grade, methods=['GET', 'POST'])
+manager.create_api(Mode, methods=['GET', 'POST'])
 
 
 @app.route('/login', methods=['POST'])
@@ -53,8 +53,8 @@ def login():
 @app.route('/dashboard', methods=['POST'])
 def dashboard():
     posted_date = request.get_json()['date']
-    total_registered_users = db.session.query(User).count()
-    total_present_users = PunchRecord.query.filter_by(date_only=posted_date).count()
+    total_registered_users = User.query.count()
+    total_present_users = PunchRecord.query.filter_by(date_only=posted_date).group_by(PunchRecord.user_id).count()
     data_to_be_sent = {
         "total_registered_users": total_registered_users,
         "total_present_users": total_present_users
@@ -67,7 +67,8 @@ def apply_cors(response):
     response.headers['Access-Control-Allow-Headers'] = 'content-type'
     return response
 
-app.run(
-    host='192.168.1.124',
-    port=9090
-)
+if __name__ == '__main__':
+    app.run(
+        host='192.168.1.124',
+        port=9090
+    )
