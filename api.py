@@ -20,12 +20,20 @@ def auth_func(*args, **kwargs):
     return True
 
 
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Credentials'] = 'true'
+    # Set whatever other headers you like...
+    return response
+
+
 # manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func]))
 manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'])
 manager.create_api(Branch, methods=['GET', 'POST'])
 manager.create_api(Department, methods=['GET', 'POST'])
 manager.create_api(SubDepartment, methods=['GET', 'POST'])
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -41,6 +49,7 @@ def login():
     else:
         return 'not found'
 
+
 @app.route('/dashboard', methods=['POST'])
 def dashboard():
     posted_date = request.get_json()['date']
@@ -51,6 +60,12 @@ def dashboard():
         "total_present_users": total_present_users
     }
     return jsonify(data_to_be_sent)
+
+@app.after_request
+def apply_cors(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'content-type'
+    return response
 
 app.run(
     host='192.168.1.124',
