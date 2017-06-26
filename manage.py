@@ -1,11 +1,17 @@
 from app import db,app
 from models.admin import Admin
 from flask_script import Manager
+from models.user import User
+from models.punch_record import PunchRecord
+from models.branch import Branch
+from models.department import Department
+from models.sub_department import SubDepartment
+from models.designation import Designation
 from models.grade import Grade
 from models.mode import Mode
-from models.type import Type
 from models.status import Status
-
+from models.type import Type
+from models.employee import Employee
 
 manager = Manager(app)
 

@@ -12,6 +12,7 @@ from models.grade import Grade
 from models.mode import Mode
 from models.status import Status
 from models.type import Type
+from models.employee import Employee
 
 
 def auth_func(*args, **kwargs):
@@ -33,6 +34,10 @@ manager.create_api(SubDepartment, methods=['GET', 'POST'])
 manager.create_api(Designation, methods=['GET', 'POST'])
 manager.create_api(Grade, methods=['GET', 'POST'])
 manager.create_api(Mode, methods=['GET', 'POST'])
+manager.create_api(Status, methods=['GET', 'POST'])
+manager.create_api(Type, methods=['GET', 'POST'])
+manager.create_api(Employee, methods=['GET', 'POST'])
+manager.create_api(PunchRecord, methods=['GET', 'POST'])
 
 
 @app.route('/login', methods=['POST'])
