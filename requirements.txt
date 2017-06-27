@@ -5,3 +5,5 @@ Flask-SQLAlchemy
 Flask-Script
 pymysql
 pyjwt
+Flask-Bcrypt
+gunicorn
