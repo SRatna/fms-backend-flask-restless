@@ -13,6 +13,7 @@ from models.mode import Mode
 from models.status import Status
 from models.type import Type
 from models.employee import Employee
+from models.branch_department import BranchDepartment
 import datetime
 
 fmt = '%Y-%m-%d'  # format for date extraction
@@ -42,6 +43,7 @@ manager.create_api(Status, methods=['GET', 'POST'])
 manager.create_api(Type, methods=['GET', 'POST'])
 manager.create_api(Employee, methods=['GET', 'POST'])
 manager.create_api(PunchRecord, methods=['GET', 'POST'])
+manager.create_api(BranchDepartment, methods=['GET', 'POST'])
 
 
 @app.route('/api/login', methods=['POST'])

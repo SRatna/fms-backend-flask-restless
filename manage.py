@@ -12,6 +12,7 @@ from models.mode import Mode
 from models.status import Status
 from models.type import Type
 from models.employee import Employee
+from models.branch_department import BranchDepartment
 
 manager = Manager(app)
 
