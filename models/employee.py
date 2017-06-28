@@ -2,6 +2,7 @@ from app import db
 
 class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(200))
     first_name = db.Column(db.String(200))
     middle_name = db.Column(db.String(200))
     last_name = db.Column(db.String(200))
