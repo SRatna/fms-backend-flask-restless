@@ -13,6 +13,7 @@ from models.status import Status
 from models.type import Type
 from models.employee import Employee
 from models.branch_department import BranchDepartment
+from models.department_sub_department import DepartmentSubDepartment
 
 manager = Manager(app)
 
