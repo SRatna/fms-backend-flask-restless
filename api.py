@@ -60,7 +60,8 @@ def login():
         print(password_matched)
         return jsonify(access_token)
     else:
-        return 'not found'
+        error = {"error": "user not found"}
+        return jsonify(error)
 
 
 @app.route('/api/dashboard', methods=['POST'])
