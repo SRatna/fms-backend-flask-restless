@@ -160,7 +160,7 @@ def attendance():
 @app.after_request
 def apply_cors(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = 'content-type'
+    response.headers['Access-Control-Allow-Headers'] = 'content-type, auth-token'
     return response
 
 
