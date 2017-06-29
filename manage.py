@@ -24,7 +24,7 @@ def create_db():
 @manager.command
 def create_admin():
     admin = Admin(
-        email='sunamjohn@gmail.com',
+        email='admin@gmail.com',
         password='admin'
     )
     db.session.add(admin)
