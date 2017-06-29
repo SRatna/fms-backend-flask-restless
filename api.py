@@ -31,8 +31,8 @@ def auth_func(*args, **kwargs):
     return True
 
 
-# manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func]))
-manager = APIManager(app, flask_sqlalchemy_db=db)
+manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func], POST_MANY=[auth_func]))
+# manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'], results_per_page=0)
 manager.create_api(Branch, methods=['GET', 'POST', 'DELETE', 'PATCH'])
 manager.create_api(Department, methods=['GET', 'POST'])
