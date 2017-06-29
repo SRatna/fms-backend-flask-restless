@@ -54,11 +54,12 @@ def login():
     user = Admin.query.filter_by(email=email).all()
     if len(user) > 0:
         password_matched = bcrypt.check_password_hash(user[0].password, password)
-        print(user[0].id)
-        print(Admin.encode_auth_token(user[0].id))
-        access_token = {"token": Admin.encode_auth_token(user[0].id).decode('utf-8')}
-        print(password_matched)
-        return jsonify(access_token)
+        if password_matched:
+            access_token = {"token": Admin.encode_auth_token(user[0].id).decode('utf-8')}
+            return jsonify(access_token)
+        else:
+            error = {"error": "password did not matched"}
+            return jsonify(error)
     else:
         error = {"error": "user not found"}
         return jsonify(error)
@@ -78,19 +79,20 @@ def dashboard():
 
 @app.route('/api/attendance', methods=['POST'])
 def attendance():
-    global check_in, check_out, formatted_worked_time, status, remarks
+    global check_in, check_out, formatted_worked_time, status, remarks, formatted_total_worked_time
     user_id = request.get_json()['user_id']
     start_date = request.get_json()['start_date']
     end_date = request.get_json()['end_date']
     start_date_obj = datetime.datetime.strptime(start_date, fmt)
     end_date_obj = datetime.datetime.strptime(end_date, fmt)
     date = start_date_obj
+    # initialize an empty total_worked_time
+    total_worked_time = datetime.timedelta()
     # initialize an empty array for data to be sent
-    data_to_be_sent = []
+    attendance_records = []
     while date <= end_date_obj:
         date_string = str(date.date())
         results = PunchRecord.query.filter_by(user_id=user_id).filter_by(date_only=date_string).all()
-        print(results)
         if date.weekday() == 5:
             day = 'Saturday'
         else:
@@ -120,6 +122,8 @@ def attendance():
                                     worked_time_array[2] + ' seconds'
             status = 'Present'
             remarks = 'xxx'
+            total_worked_time = total_worked_time + worked_time
+            print(type(worked_time))
         if len(results) > 2:
             check_in = results[0].date_time
             check_out = results[len(results)].date_time
@@ -130,9 +134,10 @@ def attendance():
                                     worked_time_array[2] + ' seconds'
             status = 'Present'
             remarks = 'xxx'
+            total_worked_time = total_worked_time + worked_time
         check_in_array = str(check_in).split(' ')
         check_out_array = str(check_out).split(' ')
-        data_to_be_sent.append({
+        attendance_records.append({
             'date': str(date.date()),
             'check_in': check_in_array[1],
             'check_out': check_out_array[1],
@@ -142,9 +147,15 @@ def attendance():
             'day': day
         })
         date += datetime.timedelta(days=1)
-
+    total_worked_time_str = str(total_worked_time)
+    total_worked_time_array = total_worked_time_str.split(':')
+    formatted_total_worked_time = total_worked_time_array[0] + ' hours ' + total_worked_time_array[1] + ' minutes ' + \
+                            total_worked_time_array[2] + ' seconds'
+    data_to_be_sent = [{
+        "attendance_records": attendance_records,
+        "total_worked_time": formatted_total_worked_time
+    }]
     return jsonify(data_to_be_sent)
-
 
 @app.after_request
 def apply_cors(response):
