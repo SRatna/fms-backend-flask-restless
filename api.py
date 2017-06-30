@@ -31,10 +31,10 @@ def auth_func(*args, **kwargs):
     return True
 
 
-manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func], POST_MANY=[auth_func],
-                                                                     GET=[auth_func], DELETE=[auth_func],
-                                                                     DELETE_MANY=[auth_func], POST=[auth_func]))
-# manager = APIManager(app, flask_sqlalchemy_db=db)
+# manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[auth_func], POST_MANY=[auth_func],
+#                                                                      GET=[auth_func], DELETE=[auth_func],
+#                                                                      DELETE_MANY=[auth_func], POST=[auth_func]))
+manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'], results_per_page=0)
 manager.create_api(Branch, methods=['GET', 'POST', 'DELETE', 'PATCH'])
 manager.create_api(Department, methods=['GET', 'POST', 'DELETE', 'PATCH'])
@@ -125,7 +125,6 @@ def attendance():
             status = 'Present'
             remarks = 'xxx'
             total_worked_time = total_worked_time + worked_time
-            print(type(worked_time))
         if len(results) > 2:
             check_in = results[0].date_time
             check_out = results[len(results)].date_time
@@ -151,7 +150,17 @@ def attendance():
         date += datetime.timedelta(days=1)
     total_worked_time_str = str(total_worked_time)
     total_worked_time_array = total_worked_time_str.split(':')
-    formatted_total_worked_time = total_worked_time_array[0] + ' hours ' + total_worked_time_array[1] + ' minutes ' + \
+    # print(total_worked_time_str)
+    days_hours_str = str(total_worked_time_array[0])
+    if "days" in days_hours_str:
+        days_hours_array = days_hours_str.split(' days, ')
+        days_only = int(days_hours_array[0])
+        hours_only = int(days_hours_array[1])
+        total_hours_in_total_worked_time = days_only * 24 + hours_only
+    else:
+        total_hours_in_total_worked_time = total_worked_time_array[0]
+
+    formatted_total_worked_time = str(total_hours_in_total_worked_time) + ' hours ' + total_worked_time_array[1] + ' minutes ' + \
                             total_worked_time_array[2] + ' seconds'
     data_to_be_sent = [{
         "attendance_records": attendance_records,
@@ -169,6 +178,6 @@ def apply_cors(response):
 
 if __name__ == '__main__':
     app.run(
-        host='192.168.1.124',
+        host='192.168.1.189',
         port=9090
     )
