@@ -35,17 +35,17 @@ manager = APIManager(app, flask_sqlalchemy_db=db, preprocessors=dict(GET_MANY=[a
 # manager = APIManager(app, flask_sqlalchemy_db=db)
 manager.create_api(User, methods=['GET'], results_per_page=0)
 manager.create_api(Branch, methods=['GET', 'POST', 'DELETE', 'PATCH'])
-manager.create_api(Department, methods=['GET', 'POST'])
-manager.create_api(SubDepartment, methods=['GET', 'POST'])
-manager.create_api(Designation, methods=['GET', 'POST'])
-manager.create_api(Grade, methods=['GET', 'POST'])
-manager.create_api(Mode, methods=['GET', 'POST'])
-manager.create_api(Status, methods=['GET', 'POST'])
-manager.create_api(Type, methods=['GET', 'POST'])
-manager.create_api(Employee, methods=['GET', 'POST'])
-manager.create_api(PunchRecord, methods=['GET', 'POST'])
-manager.create_api(BranchDepartment, methods=['GET', 'POST'])
-manager.create_api(DepartmentSubDepartment, methods=['GET', 'POST'])
+manager.create_api(Department, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(SubDepartment, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Designation, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Grade, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Mode, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Status, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Type, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(Employee, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(PunchRecord, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(BranchDepartment, methods=['GET', 'POST', 'DELETE', 'PATCH'])
+manager.create_api(DepartmentSubDepartment, methods=['GET', 'POST', 'DELETE', 'PATCH'])
 
 
 @app.route('/api/login', methods=['POST'])
@@ -159,6 +159,7 @@ def attendance():
 
 @app.after_request
 def apply_cors(response):
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH'
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'content-type, auth-token'
     return response
