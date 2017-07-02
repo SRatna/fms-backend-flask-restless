@@ -47,7 +47,17 @@ manager.create_api(PunchRecord, methods=['GET', 'POST'])
 manager.create_api(BranchDepartment, methods=['GET', 'POST'])
 manager.create_api(DepartmentSubDepartment, methods=['GET', 'POST'])
 
-
+@app.route('/api/alluser', methods=['GET'])
+def alluser():
+    allusers = db.session.query(User).all()
+    totalUserList = []
+    for user in allusers:
+        totalUserList.append({
+            'id': user.id,
+            'name': user.name
+        })
+    # print(allusers)
+    return jsonify(totalUserList)
 @app.route('/api/login', methods=['POST'])
 def login():
     email, password = request.get_json()['email'], request.get_json()['password']
@@ -166,6 +176,6 @@ def apply_cors(response):
 
 if __name__ == '__main__':
     app.run(
-        host='192.168.1.124',
+        host='192.168.0.115',
         port=9090
     )
