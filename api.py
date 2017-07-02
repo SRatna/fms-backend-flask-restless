@@ -80,8 +80,12 @@ def login():
 @app.route('/api/dashboard', methods=['POST'])
 def dashboard():
     posted_date = request.get_json()['date']
-    total_registered_users = db.session.query(User).count()
-    total_present_users = PunchRecord.query.filter_by(date_only=posted_date).group_by(PunchRecord.user_id).count()
+    working_status_id = db.session.query(Status.id).filter(Status.name.like('working'))
+    registered_user_ids = db.session.query(Employee.user_id).filter(Employee.status_id.in_(working_status_id))
+    total_registered_users = Employee.query.filter(Employee.status_id.in_(working_status_id)).count()
+    total_present_users = PunchRecord.query.filter_by(date_only=posted_date)\
+        .filter(PunchRecord.user_id.in_(registered_user_ids))\
+        .group_by(PunchRecord.user_id).count()
     data_to_be_sent = {
         "total_registered_users": total_registered_users,
         "total_present_users": total_present_users
