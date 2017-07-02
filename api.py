@@ -137,7 +137,7 @@ def attendance():
             total_worked_time = total_worked_time + worked_time
         if len(results) > 2:
             check_in = results[0].date_time
-            check_out = results[len(results)].date_time
+            check_out = results[len(results) - 1].date_time
             worked_time = check_out - check_in
             worked_time_str = str(worked_time)
             worked_time_array = worked_time_str.split(':')
